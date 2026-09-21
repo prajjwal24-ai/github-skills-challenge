@@ -10,7 +10,7 @@ def load_data(file_path):
     with open(file_path, "r", encoding="utf-8") as file:
         return json.load(file)
 
-
+#changes made to run_pipeline function to fix the issues in the code
 def run_pipeline(file_path):
     data = load_data(file_path)
 
