@@ -14,6 +14,31 @@ def load_data(file_path):
 def run_pipeline(file_path):
     data = load_data(file_path)
 
+    # Use a single shared topic for both Producer and Consumer
+    topic = EventTopic("anomaly-events")
+
+    detector = AnomalyDetector()
+    producer = EventProducer(topic)
+    consumer = EventConsumer(topic)
+
+    detected_events = []
+
+    for record in data:
+        event = detector.detect(record)
+
+        if event:
+            producer.publish(event)
+            detected_events.append(event)
+
+    consumed_events = consumer.consume()
+
+    return {
+        "records_processed": len(data),
+        "anomalies_detected": detected_events,
+        "events_consumed": consumed_events
+    }
+    data = load_data(file_path)
+
     # INTENTIONAL ASSESSMENT ISSUE #2
     producer_topic = EventTopic("service-events")
 
